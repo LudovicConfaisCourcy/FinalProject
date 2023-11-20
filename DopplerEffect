@@ -1,0 +1,94 @@
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
+
+public class DopplerEffect extends Application {
+    public static void main(String[] args) {
+        launch(args);
+    }    
+    @Override
+    public void start(Stage primaryStage) {
+        
+        final double MIN = 0.0, MAX = 100.0 , INITIAL = 0.0;
+        final double MAJOR_TICK_UNIT = 20.0;
+        final int MINOR_TICK_COUNT = 5;
+        final double SLIDER_WIDTH = 300.0;
+        final double LABEL_WIDTH = 50.0;
+        final double SPACING = 10.0;
+        
+        Label ofDescriptor = new Label("Observed Frequency: ");
+        Label vSoundDescriptor = new Label("Sound Velocity: ");
+        Label afDescriptor = new Label("Actual Frequency: ");
+        Label ovDescriptor = new Label("Observer Velocity: ");        
+        Label svDescriptor = new Label("Source Velocity: ");
+        
+        TextField ofTextField = new TextField();
+        ofTextField.setStyle("-fx-border-style: solid;" + "-fxalignment: center");
+        ofTextField.setPrefWidth(LABEL_WIDTH);
+     
+        TextField afTextField = new TextField();
+        afTextField.setStyle("-fx-border-style: solid;" + "-fxalignment: center");
+        afTextField.setPrefWidth(LABEL_WIDTH);
+        
+        TextField svTextField = new TextField();
+        svTextField.setStyle("-fx-border-style: solid;" + "-fxalignment: center");
+        svTextField.setPrefWidth(LABEL_WIDTH);
+        
+        TextField ovTextField = new TextField();
+        ovTextField.setStyle("-fx-border-style: solid;" + "-fxalignment: center");
+        ovTextField.setPrefWidth(LABEL_WIDTH);
+    
+        TextField vSoundTextField = new TextField();
+        vSoundTextField.setStyle("-fx-border-style: solid;" + "-fxalignment: center");
+        vSoundTextField.setPrefWidth(LABEL_WIDTH);
+        
+        HBox ofHBox = new HBox(ofDescriptor, ofTextField);
+        ofHBox.setAlignment(Pos.CENTER);
+        HBox afHBox = new HBox(afDescriptor,afTextField);
+        afHBox.setAlignment(Pos.CENTER);
+        HBox ovHBox = new HBox(ovDescriptor, ovTextField);
+        ovHBox.setAlignment(Pos.CENTER);
+        HBox svHBox = new HBox(svDescriptor,svTextField);
+        svHBox.setAlignment(Pos.CENTER);
+        HBox vSoundHBox = new HBox(vSoundDescriptor, vSoundTextField);
+        vSoundHBox.setAlignment(Pos.CENTER);
+        
+        Slider slider = new Slider(MIN, MAX, INITIAL);
+        slider.setShowTickMarks(true);
+        slider.setMajorTickUnit(MAJOR_TICK_UNIT);
+        slider.setMinorTickCount(MINOR_TICK_COUNT);
+        slider.setShowTickLabels(true);
+        slider.setSnapToTicks(true);
+        slider.setPrefWidth(SLIDER_WIDTH);
+        
+        slider.valueProperty().addListener((observable, oldvalue, newvalue)->{
+            double vObserver = slider.getValue();
+            double vSource = -30;
+            double actualFrequency = 300;
+            double vSound = 343;
+            double observedFrequency = actualFrequency * (vSound + vObserver)/(vSound + vSource);
+            
+            ovTextField.setText(String.format("%.1f", vObserver));
+            ofTextField.setText(String.format("%.1f", observedFrequency));
+            afTextField.setText(String.format("%.1f", actualFrequency));
+            svTextField.setText(String.format("%.1f", vSource));
+            vSoundTextField.setText(String.format("%.1f", vSound));
+        });
+        
+        
+        VBox mainVbox = new VBox(10, ofHBox, afHBox, ovHBox,svHBox, vSoundHBox, slider);
+        mainVbox.setAlignment(Pos.CENTER);
+        mainVbox.setPadding(new Insets(SPACING));       
+        
+        Scene scene = new Scene(mainVbox);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }   
+}
