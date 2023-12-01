@@ -201,18 +201,7 @@ public class DopplerEffect extends Application {
         
         slider.valueProperty().addListener((observable, oldvalue, newvalue)->{
             vObserver = slider.getValue();
-            vSource = -30;
-            actualFrequency = 300;
-
         ovTextField.setText(String.format("%.1f", vObserver));
-        afTextField.setText(String.format("%.1f", actualFrequency));
-        svTextField.setText(String.format("%.1f", vSource));
-            
-        });
-        vSoundTextField.setOnAction(event -> {
-        vSound = Double.valueOf(vSoundTextField.getText());
-        
-        vSoundTextField.setText(String.format("%.1f", vSound));
         });
         
         
