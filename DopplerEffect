@@ -1,3 +1,11 @@
+// First window choose animation or calculator
+// Welcome everybody avec animation
+//animation avec son replay video,
+//Calculator, 
+
+
+import java.io.File;
+import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -5,23 +13,86 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 public class DopplerEffect extends Application {
     public static void main(String[] args) {
         launch(args);
     }    
+        double vSource;
+        double actualFrequency;
+        double vSound;
+        double vObserver;
+        double observedFrequency;
+        private double FIVE_SEC = 5000.0;
+        private double START_SCALE = 1.0;
+        private double END_SCALE = 2.0;
     @Override
     public void start(Stage primaryStage) {
-        
+
+                Text text = new Text("Welcome to the Doppler Effect Application");
+        ScaleTransition strans = new ScaleTransition(new Duration(FIVE_SEC), text);
+        strans.setFromX(START_SCALE);
+        strans.setFromY(START_SCALE);
+        strans.setToX(END_SCALE);
+        strans.setToY(END_SCALE);
+
+        VBox vbox = new VBox(20); // Set spacing between nodes
+        vbox.setAlignment(Pos.TOP_CENTER);
+        vbox.setPadding(new Insets(20)); // Add padding around the VBox
+
+        Button button1 = new Button("Show the calculator");
+        button1.setOnAction(event -> showSecondWindow());
+
+        Button button2 = new Button("Show the animation");
+        button2.setOnAction(event -> showThirdWindow());
+
+        Button closeButton = new Button("Close");
+        closeButton.setOnAction(event -> {
+            primaryStage.close();
+        });
+
+        HBox buttonsBox = new HBox(10, button1, button2, closeButton);
+        buttonsBox.setAlignment(Pos.CENTER);
+
+        // Set margin above the buttonsBox to create space between the text and buttons
+        VBox.setMargin(buttonsBox, new Insets(20, 0, 0, 0)); // Adjust top margin as needed
+
+        vbox.getChildren().addAll(text, buttonsBox);
+
+        Scene scene = new Scene(vbox, 500, 150); // Set preferred window size
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("The Scale Transition Application");
+        primaryStage.show();
+        strans.play();
+    }   
+    
+    public void showSecondWindow(){
+                
         final double MIN = 0.0, MAX = 100.0 , INITIAL = 0.0;
         final double MAJOR_TICK_UNIT = 20.0;
         final int MINOR_TICK_COUNT = 5;
         final double SLIDER_WIDTH = 300.0;
         final double LABEL_WIDTH = 50.0;
         final double SPACING = 10.0;
+        
+        Button calcButton = new Button("Calculate");
+        ComboBox<String> cbox = new ComboBox();
+        cbox.getItems().addAll("Observed Frequency","Actual Frequency","Observer Velocity","Source Velocity");
+        cbox.getSelectionModel().selectFirst();
         
         Label ofDescriptor = new Label("Observed Frequency: ");
         Label vSoundDescriptor = new Label("Sound Velocity: ");
@@ -68,27 +139,140 @@ public class DopplerEffect extends Application {
         slider.setSnapToTicks(true);
         slider.setPrefWidth(SLIDER_WIDTH);
         
-        slider.valueProperty().addListener((observable, oldvalue, newvalue)->{
-            double vObserver = slider.getValue();
-            double vSource = -30;
-            double actualFrequency = 300;
-            double vSound = 343;
-            double observedFrequency = actualFrequency * (vSound + vObserver)/(vSound + vSource);
+
+
+    BorderPane borderPane = new BorderPane();
+    MenuBar menuBar = new MenuBar();
+    Menu fileMenu = new Menu("File");
+    MenuItem exitItem = new MenuItem("Exit");
+    fileMenu.getItems().add(exitItem);
+
+    exitItem.setOnAction(event -> {
+        Stage stage = (Stage) borderPane.getScene().getWindow();
+        stage.close();
+    });
+           menuBar.getMenus().addAll(fileMenu);
+           borderPane.setTop(menuBar);
+        
+        calcButton.setOnAction(event -> {
+           String choice = cbox.getValue();
+           
+           switch (choice){
             
-            ovTextField.setText(String.format("%.1f", vObserver));
-            ofTextField.setText(String.format("%.1f", observedFrequency));
-            afTextField.setText(String.format("%.1f", actualFrequency));
-            svTextField.setText(String.format("%.1f", vSource));
-            vSoundTextField.setText(String.format("%.1f", vSound));
+            case "Observed Frequency":
+                vSound = Double.parseDouble(vSoundTextField.getText());
+                vSource = Double.parseDouble(svTextField.getText());
+                vObserver = Double.parseDouble(ovTextField.getText());
+                actualFrequency = Double.parseDouble(afTextField.getText());
+                observedFrequency = actualFrequency * (vSound + vObserver)/(vSound + vSource);
+                ofTextField.setText(String.format("%.1f", observedFrequency));
+                break;
+            
+            case "Actual Frequency":
+                vSound = Double.parseDouble(vSoundTextField.getText());
+                vSource = Double.parseDouble(svTextField.getText());
+                vObserver = Double.parseDouble(ovTextField.getText());
+                observedFrequency = Double.parseDouble(ofTextField.getText());
+                actualFrequency = observedFrequency *(vSound + vSource)/(vSound + vObserver);
+                afTextField.setText(String.format("%.1f", actualFrequency));
+                break;
+            
+            case "Source Velocity":
+                vSound = Double.parseDouble(vSoundTextField.getText());
+                actualFrequency  = Double.parseDouble(afTextField.getText());
+                vObserver = Double.parseDouble(ovTextField.getText());
+                observedFrequency = Double.parseDouble(ofTextField.getText());
+                vSource = (actualFrequency *(vObserver + vSound)/observedFrequency)- vSound;
+                svTextField.setText(String.format("%.1f", vSource));
+                break;
+            
+            case "Observer Velocity":
+                vSound = Double.parseDouble(vSoundTextField.getText());
+                vSource = Double.parseDouble(svTextField.getText());
+                actualFrequency = Double.parseDouble(afTextField.getText());
+                observedFrequency = Double.parseDouble(ofTextField.getText());
+                vObserver = (observedFrequency *(vSound + vSource)/actualFrequency)- vSource;
+                ovTextField.setText(String.format("%.1f", vObserver));
+                break;
+
+
+        }
+        });
+        
+        slider.valueProperty().addListener((observable, oldvalue, newvalue)->{
+            vObserver = slider.getValue();
+            vSource = -30;
+            actualFrequency = 300;
+
+        ovTextField.setText(String.format("%.1f", vObserver));
+        afTextField.setText(String.format("%.1f", actualFrequency));
+        svTextField.setText(String.format("%.1f", vSource));
+            
+        });
+        vSoundTextField.setOnAction(event -> {
+        vSound = Double.valueOf(vSoundTextField.getText());
+        
+        vSoundTextField.setText(String.format("%.1f", vSound));
         });
         
         
-        VBox mainVbox = new VBox(10, ofHBox, afHBox, ovHBox,svHBox, vSoundHBox, slider);
+        
+        VBox mainVbox = new VBox(10, cbox,ofHBox, afHBox, ovHBox,svHBox, vSoundHBox, slider, calcButton);
         mainVbox.setAlignment(Pos.CENTER);
         mainVbox.setPadding(new Insets(SPACING));       
         
-        Scene scene = new Scene(mainVbox);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }   
+
+    borderPane.setCenter(mainVbox);
+    Scene secondScene = new Scene(borderPane);
+    Stage secondStage = new Stage();
+    secondStage.setScene(secondScene);
+    secondStage.showAndWait();
+    }
+    
+   public void showThirdWindow() {
+    final double WIDTH = 640.0, HEIGHT = 480.0;
+    File videoFile = new File("C:\\Users\\17171397\\Documents\\dopplereffectvideo.mp4");
+    Media media = new Media(videoFile.toURI().toString());
+    MediaPlayer player = new MediaPlayer(media);
+    player.setOnEndOfMedia(() -> {
+        player.stop();
+    });
+    MediaView view = new MediaView(player);
+    view.setFitWidth(WIDTH);
+    view.setFitHeight(HEIGHT);
+    Button playButton = new Button("Play");
+    Button pauseButton = new Button("Pause");
+    Button stopButton = new Button("Stop");
+
+    playButton.setOnAction(event -> {
+        player.play();
+    });
+
+    pauseButton.setOnAction(event -> {
+        player.pause();
+    });
+
+    stopButton.setOnAction(event -> {
+        player.stop();
+    });
+
+    HBox hbox = new HBox(10, playButton, pauseButton, stopButton);
+    hbox.setAlignment(Pos.CENTER);
+    hbox.setPadding(new Insets(10));
+
+    BorderPane borderPane = new BorderPane();
+    borderPane.setCenter(view);
+    borderPane.setBottom(hbox);
+
+    Stage stage = new Stage();
+    stage.setTitle("The VideoPlayer application");
+    Scene scene = new Scene(borderPane);
+    stage.setScene(scene);
+    stage.show();
 }
+
+    
+    
+}
+
+
