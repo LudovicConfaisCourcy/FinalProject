@@ -120,15 +120,28 @@ public class DopplerEffect extends Application {
         vSoundTextField.setStyle("-fx-border-style: solid;" + "-fxalignment: center");
         vSoundTextField.setPrefWidth(LABEL_WIDTH);
         
-        HBox ofHBox = new HBox(ofDescriptor, ofTextField);
+        RadioButton ovRadio = new RadioButton();
+        RadioButton svRadio = new RadioButton();
+        RadioButton ofRadio = new RadioButton();
+        RadioButton afRadio = new RadioButton();
+        RadioButton vSoundRadio = new RadioButton();
+        
+        ToggleGroup radioGroup = new ToggleGroup();
+        ovRadio.setToggleGroup(radioGroup);
+        ofRadio.setToggleGroup(radioGroup);
+        svRadio.setToggleGroup(radioGroup);
+        afRadio.setToggleGroup(radioGroup);
+        vSoundRadio.setToggleGroup(radioGroup);
+        
+        HBox ofHBox = new HBox(ofRadio,ofDescriptor, ofTextField);
         ofHBox.setAlignment(Pos.CENTER);
-        HBox afHBox = new HBox(afDescriptor,afTextField);
+        HBox afHBox = new HBox(afRadio,afDescriptor,afTextField);
         afHBox.setAlignment(Pos.CENTER);
-        HBox ovHBox = new HBox(ovDescriptor, ovTextField);
+        HBox ovHBox = new HBox(ovRadio,ovDescriptor, ovTextField);
         ovHBox.setAlignment(Pos.CENTER);
-        HBox svHBox = new HBox(svDescriptor,svTextField);
+        HBox svHBox = new HBox(svRadio,svDescriptor,svTextField);
         svHBox.setAlignment(Pos.CENTER);
-        HBox vSoundHBox = new HBox(vSoundDescriptor, vSoundTextField);
+        HBox vSoundHBox = new HBox(vSoundRadio,vSoundDescriptor, vSoundTextField);
         vSoundHBox.setAlignment(Pos.CENTER);
         
         Slider slider = new Slider(MIN, MAX, INITIAL);
@@ -199,11 +212,29 @@ public class DopplerEffect extends Application {
         }
         });
         
-        slider.valueProperty().addListener((observable, oldvalue, newvalue)->{
-            vObserver = slider.getValue();
-        ovTextField.setText(String.format("%.1f", vObserver));
-        });
-        
+            slider.valueProperty().addListener((observable, oldvalue, newvalue)->{
+                if (radioGroup.getSelectedToggle() == ovRadio) {                    
+                vObserver = slider.getValue();         
+                ovTextField.setText(String.format("%.1f", vObserver));
+            }
+                else if (radioGroup.getSelectedToggle() == svRadio) {                    
+                vSource = slider.getValue();         
+                svTextField.setText(String.format("%.1f", vSource));
+            }
+                else if (radioGroup.getSelectedToggle() == afRadio) {                    
+                actualFrequency = slider.getValue();         
+                afTextField.setText(String.format("%.1f", actualFrequency));
+            }
+                else if (radioGroup.getSelectedToggle() == ofRadio) {                    
+                observedFrequency = slider.getValue();         
+                ofTextField.setText(String.format("%.1f", observedFrequency));
+            }
+                else if (radioGroup.getSelectedToggle() == vSoundRadio) {                    
+                vSound = slider.getValue();         
+                vSoundTextField.setText(String.format("%.1f", vSound));
+            }
+
+         });
         
         
         VBox mainVbox = new VBox(10, cbox,ofHBox, afHBox, ovHBox,svHBox, vSoundHBox, slider, calcButton);
