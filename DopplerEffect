@@ -368,7 +368,7 @@ public class DopplerEffect1 extends Application {
     hyperlink.setOnAction(e -> getHostServices().showDocument(url));
     
     
-    Text text3 = new Text(X3, Y3, "Team Members : Ludovic Confais Courcy,Amine Ait Yakoub,Enrico Sombini");
+    Text text3 = new Text(X3, Y3, "Team Members : Ludovic Confais Courcy, Amine Ait Yakoub, Enrico Sombini");
     text3.setFont(new Font("SansSerif", FONT_SIZE));
     text3.setScaleX(SCALE_QTR);
     text3.setScaleY(SCALE_QTR);
@@ -396,8 +396,8 @@ public class DopplerEffect1 extends Application {
      Button fCalc =new Button("Doppler Effect");
      
      fCalc.setOnAction(event->showDopplerCalcWindow());
-     sCalc.setOnAction(event->showSoundWindow());
-     uCalc.setOnAction(event->showUnitWindow());
+     sCalc.setOnAction(event->showSoundCalcWindow());
+     uCalc.setOnAction(event->showUnitCalcWindow());
      VBox vbox = new VBox(10,c,sCalc,uCalc,fCalc);
      vbox.setAlignment(Pos.CENTER);
      vbox.setPadding(new Insets(10));
@@ -407,7 +407,7 @@ public class DopplerEffect1 extends Application {
     fourthStage.setScene(scene);
     fourthStage.show();
   } 
-  public void showSoundWindow() {
+  public void showSoundCalcWindow() {
   
      Stage fourthStage = new Stage();
      final double SCENE_WIDTH = 1000.0, SCENE_HEIGHT = 600.0;        
@@ -457,7 +457,7 @@ public class DopplerEffect1 extends Application {
     fourthStage.setScene(scene);
     fourthStage.show();
   }
-  public void showUnitWindow() {
+  public void showUnitCalcWindow() {
   
      Stage fourthStage = new Stage();
      Label clabel = new Label("Choose Units to Convert");
@@ -508,6 +508,18 @@ public class DopplerEffect1 extends Application {
         mvbox.setAlignment(Pos.CENTER);
         mvbox.setPadding(new Insets(10));
         
+                MenuBar menuBar = new MenuBar();
+        Menu fileMenu = new Menu("File");
+        MenuItem exitItem = new MenuItem("Exit");
+        fileMenu.getItems().add(exitItem);
+        
+        exitItem.setOnAction(event ->{
+            fourthStage.close();                  
+        });
+        
+        menuBar.getMenus().addAll(fileMenu);
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(menuBar);
         
         VBox vbox = new VBox(10);
         VBox cvbox = new VBox(10);                
@@ -581,8 +593,9 @@ public class DopplerEffect1 extends Application {
         vbox.getChildren().setAll(clabel,cbox,cvbox);
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(10));
-      
-     Scene scene = new Scene(vbox,400,300);
+        
+      borderPane.setCenter(vbox);
+        Scene scene = new Scene(borderPane,400,300);
     fourthStage.setTitle("Unit Convertor");
     fourthStage.setScene(scene);
     fourthStage.show();
