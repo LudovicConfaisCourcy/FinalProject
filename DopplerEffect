@@ -1,9 +1,3 @@
-// First window choose animation or calculator
-// Welcome everybody avec animation
-//animation avec son replay video,
-//Calculator, 
-
-
 import java.io.File;
 import javafx.animation.ScaleTransition;
 import javafx.application.Application;
@@ -18,19 +12,22 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-public class DopplerEffect1 extends Application {
+public class DopplerEffect extends Application {
     public static void main(String[] args) {
         launch(args);
     }    
@@ -91,7 +88,7 @@ public class DopplerEffect1 extends Application {
 
     Scene scene = new Scene(mainVbox, 500, 200); // Set preferred window size
     primaryStage.setScene(scene);
-    primaryStage.setTitle("The Scale Transition Application");
+    primaryStage.setTitle("The DopplerEffect Project");
     primaryStage.show();
     strans.play();
 
@@ -258,12 +255,13 @@ public class DopplerEffect1 extends Application {
         mainVbox.setAlignment(Pos.CENTER);
         mainVbox.setPadding(new Insets(SPACING));       
         
-
+        
     borderPane.setCenter(mainVbox);
     Scene secondScene = new Scene(borderPane);
     Stage secondStage = new Stage();
     secondStage.setScene(secondScene);
     secondStage.showAndWait();
+    secondStage.setTitle("Calculator Page");
     }
     
    public void showThirdWindow() {
@@ -302,15 +300,69 @@ public class DopplerEffect1 extends Application {
     borderPane.setBottom(hbox);
 
     Stage stage = new Stage();
-    stage.setTitle("The VideoPlayer application");
+    stage.setTitle("Animation Page");
     Scene scene = new Scene(borderPane);
     stage.setScene(scene);
     stage.show();
 }
+   
    public void showFourthWindow() {
+    final double SCENE_WIDTH = 800.0;
+    final double SCENE_HEIGHT = 200.0;
+    final double X1 = 30.0, Y1 = 100;
+    final double X2 = 30.0, Y2 = 130.0;
+    final double X3 = 30.0, Y3 = 150.0;
+    final double FONT_SIZE = 38;
+    final double SCALE_HALF = 0.30;
+    final double SCALE_QTR = 0.25;
+
+    Stage fourthStage = new Stage(); // Create a new stage for the fourth window
+
+    Text text1 = new Text(X1, Y1, "Information");
+    text1.setFont(new Font("SansSerif", FONT_SIZE));
+    
+
+    Text text2 = new Text(X2, Y2, "Our project offers an innovative JavaFX program designed to solve a fundamental problem in wave physics, which is calculating the velocity ");
+    text2.setFont(new Font("SansSerif", FONT_SIZE));
+    text2.setScaleX(SCALE_HALF);
+    text2.setScaleY(SCALE_HALF);
+    text2.setTranslateY(15); // Translate the second text by 30 units vertically
+    
+    Text text21 = new Text(X2, Y2, "or frequency of a wave when a source and/or observer is in motion, taking into account the Doppler effect.");
+    text21.setFont(new Font("SansSerif", FONT_SIZE));
+    text21.setScaleX(SCALE_HALF);
+    text21.setScaleY(SCALE_HALF);
+    text21.setTranslateY(-15); // Translate the second text by 30 units vertically
+    
+    String url = "https://www.youtube.com/watch?v=h4OnBYrbCjY&ab_channel=AltShiftX"; // Replace with your desired URL
+
+    Hyperlink hyperlink = new Hyperlink("Visit Animation Source");
+    hyperlink.setOnAction(e -> getHostServices().showDocument(url));
     
     
+    Text text3 = new Text(X3, Y3, "Team Members : Ludovic Confais Courcy,Amine Ait Yakoub,Enrico Sombini");
+    text3.setFont(new Font("SansSerif", FONT_SIZE));
+    text3.setScaleX(SCALE_QTR);
+    text3.setScaleY(SCALE_QTR);
+    text3.setTranslateY(10); // Translate the third text by 60 units vertically
+
     
-    
-    }    
+    VBox vbox = new VBox(text1, text2, text21,hyperlink, text3); 
+    vbox.setAlignment(Pos.CENTER);
+    //Pane pane = new Pane(text1, text2, text3);
+    Scene scene = new Scene(vbox, SCENE_WIDTH, SCENE_HEIGHT);
+
+    fourthStage.setTitle("Information Page");
+    fourthStage.setScene(scene);
+    fourthStage.show();
+}
+   
+   
+
+
+   
+   
+   
+   
+   
 }
