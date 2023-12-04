@@ -29,7 +29,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-public class DopplerEffect extends Application {
+public class DopplerEffect1 extends Application {
     public static void main(String[] args) {
         launch(args);
     }    
@@ -57,7 +57,7 @@ public class DopplerEffect extends Application {
     vbox1.getChildren().add(text);
 
     
-    Image image = new Image("file:C:\\Users\\17171397\\Documents\\dopplereffectimage.png");  
+    Image image = new Image("file:dopplereffectimage.png");  
     ImageView imageV = new ImageView(image);
     imageV.setFitWidth(300);
     imageV.setPreserveRatio(true);
@@ -282,7 +282,7 @@ public class DopplerEffect extends Application {
     
    public void showThirdWindow() {
     final double WIDTH = 640.0, HEIGHT = 480.0;
-    File videoFile = new File("C:\\Users\\17171397\\Documents\\dopplereffectvideo.mp4");
+    File videoFile = new File("dopplereffectvideo.mp4");
     Media media = new Media(videoFile.toURI().toString());
     MediaPlayer player = new MediaPlayer(media);
     player.setOnEndOfMedia(() -> {
@@ -324,7 +324,7 @@ public class DopplerEffect extends Application {
    
    public void showFourthWindow() {
     final double SCENE_WIDTH = 800.0;
-    final double SCENE_HEIGHT = 200.0;
+    final double SCENE_HEIGHT = 300.0;
     final double X1 = 30.0, Y1 = 100;
     final double X2 = 30.0, Y2 = 130.0;
     final double X3 = 30.0, Y3 = 150.0;
@@ -373,13 +373,5 @@ public class DopplerEffect extends Application {
     fourthStage.setScene(scene);
     fourthStage.show();
 }
-   
-   
-
-
-   
-   
-   
-   
    
 }
