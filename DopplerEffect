@@ -19,6 +19,8 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -54,9 +56,18 @@ public class DopplerEffect extends Application {
     vbox1.setPadding(new Insets(20)); // Add padding around the VBox
     vbox1.getChildren().add(text);
 
+    
+    Image image = new Image("file:C:\\Users\\17171397\\Documents\\dopplereffectimage.png");  
+    ImageView imageV = new ImageView(image);
+    imageV.setFitWidth(300);
+    imageV.setPreserveRatio(true);
+    
+    
+    
     Button button1 = new Button("Show the calculator");
     button1.setOnAction(event -> showSecondWindow());
 
+    
     Button button2 = new Button("Show the animation");
     button2.setOnAction(event -> showThirdWindow());
 
@@ -77,16 +88,21 @@ public class DopplerEffect extends Application {
     vbox3.setAlignment(Pos.CENTER);
     vbox3.setPadding(new Insets(20)); // Add padding around the VBox
     vbox3.getChildren().addAll(button3, closeButton);
-
+    
+    button1.setStyle("-fx-background-color: blue ; -fx-text-fill: white; -fx-font-size: 10pt;-fx-font-weight: 900");
+    button2.setStyle("-fx-background-color: blue ; -fx-text-fill: white; -fx-font-size: 10pt;-fx-font-weight: 900");
+    button3.setStyle("-fx-background-color: blue ; -fx-text-fill: white; -fx-font-size: 10pt;-fx-font-weight: 900");
+    closeButton.setStyle("-fx-background-color: blue ; -fx-text-fill: white; -fx-font-size: 10pt;-fx-font-weight: 900");
+    
     HBox hbox = new HBox(20, vbox2, vbox3);
     hbox.setAlignment(Pos.CENTER);
 
     VBox mainVbox = new VBox(20); // Set spacing between nodes
     mainVbox.setAlignment(Pos.TOP_CENTER);
     mainVbox.setPadding(new Insets(20)); // Add padding around the VBox
-    mainVbox.getChildren().addAll(vbox1, hbox);
+    mainVbox.getChildren().addAll(vbox1,imageV, hbox);
 
-    Scene scene = new Scene(mainVbox, 500, 200); // Set preferred window size
+    Scene scene = new Scene(mainVbox, 500, 400); // Set preferred window size
     primaryStage.setScene(scene);
     primaryStage.setTitle("The DopplerEffect Project");
     primaryStage.show();
@@ -345,6 +361,7 @@ public class DopplerEffect extends Application {
     text3.setScaleX(SCALE_QTR);
     text3.setScaleY(SCALE_QTR);
     text3.setTranslateY(10); // Translate the third text by 60 units vertically
+    text3.setStyle("-fx-font-weight: bold; -fx-font-style: italic; -fx-text-fill: RED;-fx-underline: true;");
 
     
     VBox vbox = new VBox(text1, text2, text21,hyperlink, text3); 
