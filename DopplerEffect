@@ -428,7 +428,7 @@ public class DopplerEffect1 extends Application {
            if("Kelvins".equals(cbox.getValue())){
             temperature = Double.parseDouble(temp.getText()) ;
             vSound1 = 331 * Math.sqrt((1 + temperature)/273.15) ; 
-            result.setText(String.format("%,.2f", vSound1) + " m/s");   
+            result.setText("Sound Velocity: " +String.format("%,.2f", vSound1) + " m/s");   
             }
            else if("Celsius".equals(cbox.getValue())){
             temperature = Double.parseDouble(temp.getText()) ;
@@ -438,7 +438,7 @@ public class DopplerEffect1 extends Application {
            else if("Fahrenheit".equals(cbox.getValue())){
             temperature = Double.parseDouble(temp.getText()) ;
             vSound1 = 331 * Math.sqrt((1 + (((temperature - 32)*5/9) + 273.15))/273.15) ; 
-            result.setText(String.format("%,.2f", vSound1) + " m/s");   
+            result.setText("Sound Velocity: " +String.format("%,.2f", vSound1) + " m/s");   
             }
         });
         
@@ -600,5 +600,4 @@ public class DopplerEffect1 extends Application {
     fourthStage.setScene(scene);
     fourthStage.show();
   }               
-     
 }
