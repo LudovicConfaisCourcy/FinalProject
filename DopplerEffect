@@ -1,13 +1,18 @@
 import java.io.File;
+import java.util.Optional;
 import javafx.animation.ScaleTransition;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -37,7 +42,10 @@ public class DopplerEffect1 extends Application {
         double actualFrequency;
         double vSound;
         double vObserver;
-        double observedFrequency;
+        double observedFrequency; 
+        double temperature;
+        double vSound1;
+        double result;
         private double FIVE_SEC = 5000.0;
         private double START_SCALE = 1.0;
         private double END_SCALE = 2.0;
@@ -64,24 +72,30 @@ public class DopplerEffect1 extends Application {
     
     
     
-    Button button1 = new Button("Show the calculator");
-    button1.setOnAction(event -> showSecondWindow());
+    Button button1 = new Button("Show the Calculators");
+    button1.setOnAction(event -> showCalcWindow());
 
     
-    Button button2 = new Button("Show the animation");
-    button2.setOnAction(event -> showThirdWindow());
+    Button button2 = new Button("Show the Animation");
+    button2.setOnAction(event -> showAnimationWindow());
 
     VBox vbox2 = new VBox(20); // Set spacing between nodes
     vbox2.setAlignment(Pos.CENTER);
     vbox2.setPadding(new Insets(20)); // Add padding around the VBox
     vbox2.getChildren().addAll(button1, button2);
 
-    Button button3 = new Button("Show more information");
-    button3.setOnAction(event -> showFourthWindow());
+    Button button3 = new Button("Show more Information");
+    button3.setOnAction(event -> showInfoWindow());
 
-    Button closeButton = new Button("Close the application");
+    Button closeButton = new Button("Close the Application");
     closeButton.setOnAction(event -> {
-        primaryStage.close();
+        Label resultLabel =new Label();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setContentText("Are You Sure You Want to Exit?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.get() == ButtonType.OK)
+                primaryStage.close();
+  
     });
 
     VBox vbox3 = new VBox(20); // Set spacing between nodes
@@ -110,7 +124,7 @@ public class DopplerEffect1 extends Application {
 
     }   
     
-    public void showSecondWindow(){
+  public void showDopplerCalcWindow(){
                 
         final double MIN = 0.0, MAX = 100.0 , INITIAL = 0.0;
         final double MAJOR_TICK_UNIT = 20.0;
@@ -276,11 +290,10 @@ public class DopplerEffect1 extends Application {
     Scene secondScene = new Scene(borderPane);
     Stage secondStage = new Stage();
     secondStage.setScene(secondScene);
-    secondStage.showAndWait();
     secondStage.setTitle("Calculator Page");
+    secondStage.show();
     }
-    
-   public void showThirdWindow() {
+  public void showAnimationWindow() {
     final double WIDTH = 640.0, HEIGHT = 480.0;
     File videoFile = new File("dopplereffectvideo.mp4");
     Media media = new Media(videoFile.toURI().toString());
@@ -321,8 +334,7 @@ public class DopplerEffect1 extends Application {
     stage.setScene(scene);
     stage.show();
 }
-   
-   public void showFourthWindow() {
+  public void showInfoWindow() {
     final double SCENE_WIDTH = 800.0;
     final double SCENE_HEIGHT = 300.0;
     final double X1 = 30.0, Y1 = 100;
@@ -373,5 +385,207 @@ public class DopplerEffect1 extends Application {
     fourthStage.setScene(scene);
     fourthStage.show();
 }
-   
+  public void showCalcWindow() {
+    final double SCENE_WIDTH = 800.0;
+    final double SCENE_HEIGHT = 300.0;
+  
+     Stage fourthStage = new Stage();
+     Label c = new Label("Choose your Calculator");
+     Button sCalc =new Button("Sound velocity");
+     Button uCalc =new Button("Unit Convertor");     
+     Button fCalc =new Button("Doppler Effect");
+     
+     fCalc.setOnAction(event->showDopplerCalcWindow());
+     sCalc.setOnAction(event->showSoundWindow());
+     uCalc.setOnAction(event->showUnitWindow());
+     VBox vbox = new VBox(10,c,sCalc,uCalc,fCalc);
+     vbox.setAlignment(Pos.CENTER);
+     vbox.setPadding(new Insets(10));
+    
+     Scene scene = new Scene(vbox);
+    fourthStage.setTitle("Calculator Choice");
+    fourthStage.setScene(scene);
+    fourthStage.show();
+  } 
+  public void showSoundWindow() {
+  
+     Stage fourthStage = new Stage();
+     final double SCENE_WIDTH = 1000.0, SCENE_HEIGHT = 600.0;        
+        final double LABEL_WIDTH = 75.0;
+        
+        ComboBox<String> cbox = new ComboBox();
+        cbox.getItems().addAll("Kelvins","Celsius","Fahrenheit");
+        cbox.getSelectionModel().selectFirst();
+        
+        TextField temp = new TextField();
+        temp.setStyle("-fx-border-style: solid;" + "-fxalignment: center");
+        temp.setPrefWidth(LABEL_WIDTH);
+        Label lTemp = new Label("Temperature: ");
+        
+        Label result = new Label("Press Enter to Calculate");
+        
+       temp.setOnAction((ActionEvent event) ->{
+           if("Kelvins".equals(cbox.getValue())){
+            temperature = Double.parseDouble(temp.getText()) ;
+            vSound1 = 331 * Math.sqrt((1 + temperature)/273.15) ; 
+            result.setText(String.format("%,.2f", vSound1) + " m/s");   
+            }
+           else if("Celsius".equals(cbox.getValue())){
+            temperature = Double.parseDouble(temp.getText()) ;
+            vSound1 = 331 * Math.sqrt((1 + temperature + 273.15)/273.15) ; 
+            result.setText("Sound Velocity: " + String.format("%,.2f", vSound1) + " m/s");   
+            }
+           else if("Fahrenheit".equals(cbox.getValue())){
+            temperature = Double.parseDouble(temp.getText()) ;
+            vSound1 = 331 * Math.sqrt((1 + (((temperature - 32)*5/9) + 273.15))/273.15) ; 
+            result.setText(String.format("%,.2f", vSound1) + " m/s");   
+            }
+        });
+        
+        HBox hbox = new HBox(lTemp, temp,cbox);
+        hbox.setPadding(new Insets(10));
+        hbox.setAlignment(Pos.CENTER);
+        
+        VBox vbox = new VBox(hbox,result);
+        hbox.setPadding(new Insets(10));
+        vbox.setAlignment(Pos.CENTER);
+     
+     
+    
+     Scene scene = new Scene(vbox);
+    fourthStage.setTitle("Sound Velocity Calculator");
+    fourthStage.setScene(scene);
+    fourthStage.show();
+  }
+  public void showUnitWindow() {
+  
+     Stage fourthStage = new Stage();
+     Label clabel = new Label("Choose Units to Convert");
+        Label to2 = new Label("TO");
+        Label to1 = new Label("TO");
+        ComboBox<String> cbox = new ComboBox();
+        cbox.getItems().addAll("Meters per Second", "Hertz");
+        
+        Button calcButton1 = new Button("Calculate");
+        Button calcButton2 = new Button("Calculate");
+        
+        ComboBox<String> mbox1 = new ComboBox();
+        mbox1.getItems().addAll("Meters per Second", "Kilometer per hour");
+        mbox1.getSelectionModel().selectFirst();
+        
+        ComboBox<String> mbox2 = new ComboBox();
+        mbox2.getItems().addAll("Kilometer per hour","Meters per Second");
+        mbox2.getSelectionModel().selectFirst();
+        
+        ComboBox<String> rbox1 = new ComboBox();
+        rbox1.getItems().addAll("Hertz","Mega Hertz" );
+        rbox1.getSelectionModel().selectFirst();
+        
+        ComboBox<String> rbox2 = new ComboBox();
+        rbox2.getItems().addAll("Mega Hertz", "Hertz");
+        rbox2.getSelectionModel().selectFirst();
+        
+        TextField Tf1 = new TextField();
+        TextField Tf2 = new TextField();
+        TextField Tf3 = new TextField();
+        TextField Tf4 = new TextField();
+        
+        HBox rhbox1 = new HBox(Tf1,rbox1);
+        rhbox1.setAlignment(Pos.CENTER);
+        HBox rhbox2 = new HBox(Tf2,rbox2);
+        rhbox2.setAlignment(Pos.CENTER);
+        
+        VBox rvbox = new VBox(10,rhbox1,to1,rhbox2, calcButton1);
+        rvbox.setAlignment(Pos.CENTER);
+        rvbox.setPadding(new Insets(10));
+        
+        HBox mhbox1 = new HBox(Tf3,mbox1);
+        mhbox1.setAlignment(Pos.CENTER);
+        HBox mhbox2 = new HBox(Tf4,mbox2);
+        mhbox2.setAlignment(Pos.CENTER);
+        
+        VBox mvbox = new VBox(10,mhbox1,to2,mhbox2,calcButton2);
+        mvbox.setAlignment(Pos.CENTER);
+        mvbox.setPadding(new Insets(10));
+        
+        
+        VBox vbox = new VBox(10);
+        VBox cvbox = new VBox(10);                
+        cvbox.setAlignment(Pos.CENTER);
+        cvbox.setPadding(new Insets(10));
+        
+        cbox.valueProperty().addListener((obs, oldItem, newItem)->{
+            if(cbox.getValue() == "Meters per Second"){
+            
+                cvbox.getChildren().setAll(mvbox);
+            }
+            
+            else if(cbox.getValue() == "Hertz"){
+            
+                cvbox.getChildren().setAll(rvbox);  
+            }
+        });
+        
+        calcButton1.setOnAction(event ->{
+        String choice1 = rbox1.getValue();
+        String choice2 = rbox2.getValue();
+           
+        if(choice1 == "Hertz" && choice2 == "Mega Hertz"){
+            result = 1000000 *Double.parseDouble(Tf1.getText());
+            
+            Tf2.setText(String.format("%.1f", result));
+        }
+        else if(choice1 == "Mega Hertz" && choice2 == "Hertz"){
+            
+            result = Double.parseDouble(Tf1.getText())/ 1000000;
+            
+            Tf2.setText(String.format("%.6f", result));
+        }
+        else if(choice1 == "Hertz" && choice2 == "Hertz"){
+            
+            Tf2.setText(Tf1.getText());
+        }
+        else if(choice1 == "Mega Hertz" && choice2 == "Mega Hertz"){
+                        
+            Tf2.setText(Tf1.getText());
+        }
+           
+        });
+        
+        calcButton2.setOnAction(event ->{
+        
+            String choice1 = mbox1.getValue();
+            String choice2 = mbox2.getValue();
+           
+        if(choice1 == "Meters per Second" && choice2 == "Kilometer per hour"){
+            result = 3.6 * Double.parseDouble(Tf3.getText());
+            
+            Tf4.setText(String.format("%.1f", result));
+        }
+        else if(choice1 == "Kilometer per hour" && choice2 == "Meters per Second"){
+            
+            result = Double.parseDouble(Tf3.getText())/ 3.6;
+            
+            Tf4.setText(String.format("%.1f", result));
+        }
+        else if(choice1 == "Meters per Second" && choice2 == "Meters per Second"){
+            
+            Tf4.setText(Tf3.getText());
+        }
+        else if(choice1 == "Kilometer per hour" && choice2 == "Kilometer per hour"){
+                        
+            Tf4.setText(Tf3.getText());
+        }
+        });
+        
+        vbox.getChildren().setAll(clabel,cbox,cvbox);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPadding(new Insets(10));
+      
+     Scene scene = new Scene(vbox,400,300);
+    fourthStage.setTitle("Unit Convertor");
+    fourthStage.setScene(scene);
+    fourthStage.show();
+  }               
+     
 }
